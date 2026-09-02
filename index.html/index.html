@@ -1,327 +1,203 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo de Matemática</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6, #06b6d4);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            color: #fff;
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(12px);
-            border-radius: 24px;
-            padding: 40px 30px;
-            width: 100%;
-            max-width: 480px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
-
-        .subtitle {
-            opacity: 0.85;
-            margin-bottom: 30px;
-            font-size: 1rem;
-        }
-
-        .score-board {
-            display: flex;
-            justify-content: space-between;
-            background: rgba(0, 0, 0, 0.25);
-            padding: 12px 20px;
-            border-radius: 14px;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .question {
-            font-size: 2.4rem;
-            font-weight: 700;
-            margin: 25px 0 35px;
-            letter-spacing: 1px;
-        }
-
-        .options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin-bottom: 25px;
-        }
-
-        .option {
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid transparent;
-            color: white;
-            padding: 18px 10px;
-            border-radius: 14px;
-            font-size: 1.3rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .option:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-3px);
-        }
-
-        .option.correct {
-            background: #10b981;
-            border-color: #059669;
-        }
-
-        .option.wrong {
-            background: #ef4444;
-            border-color: #dc2626;
-        }
-
-        .option:disabled {
-            cursor: not-allowed;
-            opacity: 0.8;
-        }
-
-        .btn {
-            background: white;
-            color: #1e3a8a;
-            border: none;
-            padding: 16px 32px;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 10px;
-        }
-
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .feedback {
-            font-size: 1.2rem;
-            font-weight: 600;
-            min-height: 30px;
-            margin-bottom: 15px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .final-score {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin: 20px 0;
-        }
-
-        .result-message {
-            font-size: 1.3rem;
-            margin-bottom: 30px;
-            opacity: 0.95;
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 30px 20px;
-            }
-            .question {
-                font-size: 2rem;
-            }
-            .option {
-                font-size: 1.15rem;
-                padding: 16px 8px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Jogo de Matemática</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+    .caixa {
+        background: rgba(255,255,255,0.15);
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        width: 90%;
+        max-width: 420px;
+    }
+    h1 { margin-bottom: 10px; }
+    .pergunta {
+        font-size: 32px;
+        margin: 30px 0;
+        font-weight: bold;
+    }
+    .opcoes button {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        font-size: 20px;
+        border: none;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.2);
+        color: white;
+        cursor: pointer;
+    }
+    .opcoes button:hover {
+        background: rgba(255,255,255,0.35);
+    }
+    .certo { background: #10b981 !important; }
+    .errado { background: #ef4444 !important; }
+    .info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        font-size: 18px;
+    }
+    .botao {
+        background: white;
+        color: #1e3a8a;
+        border: none;
+        padding: 15px 30px;
+        font-size: 18px;
+        border-radius: 30px;
+        cursor: pointer;
+        margin-top: 20px;
+        font-weight: bold;
+    }
+</style>
 </head>
 <body>
-    <div class="container">
-        <!-- Tela Inicial -->
-        <div id="start-screen">
-            <h1>🧮 Jogo de Matemática</h1>
-            <p class="subtitle">Teste seus conhecimentos em 10 perguntas!</p>
-            <button class="btn" onclick="startGame()">Começar Jogo</button>
-        </div>
 
-        <!-- Tela do Jogo -->
-        <div id="game-screen" class="hidden">
-            <div class="score-board">
-                <div>Pergunta: <span id="question-number">1</span>/10</div>
-                <div>Pontos: <span id="score">0</span></div>
-            </div>
+<div class="caixa" id="tela-inicio">
+    <h1>🧮 Jogo de Matemática</h1>
+    <p>Responda 10 perguntas</p>
+    <button class="botao" onclick="iniciar()">Começar</button>
+</div>
 
-            <div class="question" id="question-text">5 + 3 = ?</div>
-
-            <div class="feedback" id="feedback"></div>
-
-            <div class="options" id="options">
-                <!-- Botões gerados via JS -->
-            </div>
-        </div>
-
-        <!-- Tela Final -->
-        <div id="end-screen" class="hidden">
-            <h1>Fim de Jogo!</h1>
-            <div class="final-score" id="final-score">0</div>
-            <p class="result-message" id="result-message"></p>
-            <button class="btn" onclick="startGame()">Jogar Novamente</button>
-        </div>
+<div class="caixa" id="tela-jogo" style="display:none;">
+    <div class="info">
+        <span>Pergunta: <b id="num">1</b>/10</span>
+        <span>Pontos: <b id="pontos">0</b></span>
     </div>
+    <div class="pergunta" id="pergunta">5 + 3 = ?</div>
+    <div class="opcoes" id="opcoes"></div>
+    <div id="feedback" style="margin-top:15px; font-size:18px;"></div>
+</div>
 
-    <script>
-        let score = 0;
-        let currentQuestion = 0;
-        let correctAnswer = 0;
-        const totalQuestions = 10;
+<div class="caixa" id="tela-fim" style="display:none;">
+    <h1>Fim de Jogo!</h1>
+    <h2 id="resultado">0 pontos</h2>
+    <p id="mensagem"></p>
+    <button class="botao" onclick="iniciar()">Jogar de novo</button>
+</div>
 
-        function startGame() {
-            score = 0;
-            currentQuestion = 0;
-            document.getElementById('start-screen').classList.add('hidden');
-            document.getElementById('end-screen').classList.add('hidden');
-            document.getElementById('game-screen').classList.remove('hidden');
-            document.getElementById('score').textContent = score;
-            nextQuestion();
+<script>
+let pontos = 0;
+let atual = 0;
+let respostaCerta = 0;
+
+function iniciar() {
+    pontos = 0;
+    atual = 0;
+    document.getElementById('tela-inicio').style.display = 'none';
+    document.getElementById('tela-fim').style.display = 'none';
+    document.getElementById('tela-jogo').style.display = 'block';
+    document.getElementById('pontos').innerText = 0;
+    proxima();
+}
+
+function proxima() {
+    if (atual >= 10) {
+        fim();
+        return;
+    }
+    atual++;
+    document.getElementById('num').innerText = atual;
+    document.getElementById('feedback').innerText = '';
+
+    // Gera pergunta
+    const ops = ['+', '-', '×', '÷'];
+    const op = ops[Math.floor(Math.random() * 4)];
+    let a, b, resp, texto;
+
+    if (op === '+') {
+        a = Math.floor(Math.random()*40)+1;
+        b = Math.floor(Math.random()*40)+1;
+        resp = a + b;
+        texto = a + ' + ' + b + ' = ?';
+    } else if (op === '-') {
+        a = Math.floor(Math.random()*40)+20;
+        b = Math.floor(Math.random()*a);
+        resp = a - b;
+        texto = a + ' - ' + b + ' = ?';
+    } else if (op === '×') {
+        a = Math.floor(Math.random()*10)+1;
+        b = Math.floor(Math.random()*10)+1;
+        resp = a * b;
+        texto = a + ' × ' + b + ' = ?';
+    } else {
+        b = Math.floor(Math.random()*9)+2;
+        resp = Math.floor(Math.random()*10)+1;
+        a = b * resp;
+        texto = a + ' ÷ ' + b + ' = ?';
+    }
+
+    respostaCerta = resp;
+    document.getElementById('pergunta').innerText = texto;
+
+    // Gera opções
+    let opcoes = [resp];
+    while (opcoes.length < 4) {
+        let errada = resp + Math.floor(Math.random()*11) - 5;
+        if (errada > 0 && !opcoes.includes(errada)) {
+            opcoes.push(errada);
         }
+    }
+    opcoes = opcoes.sort(() => Math.random() - 0.5);
 
-        function nextQuestion() {
-            if (currentQuestion >= totalQuestions) {
-                endGame();
-                return;
+    const div = document.getElementById('opcoes');
+    div.innerHTML = '';
+    opcoes.forEach(valor => {
+        const btn = document.createElement('button');
+        btn.innerText = valor;
+        btn.onclick = () => verificar(btn, valor);
+        div.appendChild(btn);
+    });
+}
+
+function verificar(botao, valor) {
+    const botoes = document.querySelectorAll('.opcoes button');
+    botoes.forEach(b => b.disabled = true);
+
+    if (valor === respostaCerta) {
+        botao.classList.add('certo');
+        pontos++;
+        document.getElementById('pontos').innerText = pontos;
+        document.getElementById('feedback').innerText = '✅ Correto!';
+    } else {
+        botao.classList.add('errado');
+        document.getElementById('feedback').innerText = '❌ Errado! Era ' + respostaCerta;
+        botoes.forEach(b => {
+            if (parseInt(b.innerText) === respostaCerta) {
+                b.classList.add('certo');
             }
+        });
+    }
 
-            currentQuestion++;
-            document.getElementById('question-number').textContent = currentQuestion;
-            document.getElementById('feedback').textContent = '';
-            
-            const question = generateQuestion();
-            document.getElementById('question-text').textContent = question.text;
-            correctAnswer = question.answer;
+    setTimeout(proxima, 1200);
+}
 
-            // Gera 4 opções (1 correta + 3 erradas)
-            let options = [correctAnswer];
-            while (options.length < 4) {
-                let wrong = correctAnswer + Math.floor(Math.random() * 15) - 7;
-                if (wrong !== correctAnswer && wrong > 0 && !options.includes(wrong)) {
-                    options.push(wrong);
-                }
-            }
+function fim() {
+    document.getElementById('tela-jogo').style.display = 'none';
+    document.getElementById('tela-fim').style.display = 'block';
+    document.getElementById('resultado').innerText = pontos + ' pontos';
 
-            // Embaralha as opções
-            options = options.sort(() => Math.random() - 0.5);
+    let msg = '';
+    if (pontos === 10) msg = '🏆 Perfeito!';
+    else if (pontos >= 7) msg = '🎉 Muito bem!';
+    else if (pontos >= 5) msg = '👍 Bom trabalho!';
+    else msg = '💪 Continue praticando!';
+    document.getElementById('mensagem').innerText = msg;
+}
+</script>
 
-            const optionsContainer = document.getElementById('options');
-            optionsContainer.innerHTML = '';
-
-            options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'option';
-                btn.textContent = opt;
-                btn.onclick = () => checkAnswer(btn, opt);
-                optionsContainer.appendChild(btn);
-            });
-        }
-
-        function generateQuestion() {
-            const operations = ['+', '-', '×', '÷'];
-            const op = operations[Math.floor(Math.random() * operations.length)];
-            let a, b, answer, text;
-
-            switch (op) {
-                case '+':
-                    a = Math.floor(Math.random() * 50) + 1;
-                    b = Math.floor(Math.random() * 50) + 1;
-                    answer = a + b;
-                    text = `${a} + ${b} = ?`;
-                    break;
-                case '-':
-                    a = Math.floor(Math.random() * 50) + 20;
-                    b = Math.floor(Math.random() * a);
-                    answer = a - b;
-                    text = `${a} - ${b} = ?`;
-                    break;
-                case '×':
-                    a = Math.floor(Math.random() * 12) + 1;
-                    b = Math.floor(Math.random() * 12) + 1;
-                    answer = a * b;
-                    text = `${a} × ${b} = ?`;
-                    break;
-                case '÷':
-                    b = Math.floor(Math.random() * 10) + 2;
-                    answer = Math.floor(Math.random() * 12) + 1;
-                    a = b * answer;
-                    text = `${a} ÷ ${b} = ?`;
-                    break;
-            }
-            return { text, answer };
-        }
-
-        function checkAnswer(button, selected) {
-            // Desabilita todos os botões
-            const allButtons = document.querySelectorAll('.option');
-            allButtons.forEach(btn => btn.disabled = true);
-
-            if (selected === correctAnswer) {
-                button.classList.add('correct');
-                score++;
-                document.getElementById('score').textContent = score;
-                document.getElementById('feedback').textContent = '✅ Correto!';
-                document.getElementById('feedback').style.color = '#86efac';
-            } else {
-                button.classList.add('wrong');
-                document.getElementById('feedback').textContent = `❌ Errado! A resposta era ${correctAnswer}`;
-                document.getElementById('feedback').style.color = '#fca5a5';
-
-                // Destaca a resposta correta
-                allButtons.forEach(btn => {
-                    if (parseInt(btn.textContent) === correctAnswer) {
-                        btn.classList.add('correct');
-                    }
-                });
-            }
-
-            // Próxima pergunta após 1.2 segundos
-            setTimeout(nextQuestion, 1200);
-        }
-
-        function endGame() {
-            document.getElementById('game-screen').classList.add('hidden');
-            document.getElementById('end-screen').classList.remove('hidden');
-            document.getElementById('final-score').textContent = score;
-
-            let message = '';
-            if (score === 10) message = '🏆 Perfeito! Você é um gênio da matemática!';
-            else if (score >= 8) message = '🎉 Excelente! Muito bem!';
-            else if (score >= 6) message = '👍 Bom trabalho! Continue praticando!';
-            else if (score >= 4) message = '😊 Mais ou menos... Tente de novo!';
-            else message = '💪 Não desanime! Pratique mais e você melhora!';
-
-            document.getElementById('result-message').textContent = message;
-        }
-    </script>
 </body>
 </html>
